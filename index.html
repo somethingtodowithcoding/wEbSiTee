@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Components & Viruses</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px;
+      background: #111;
+      border-bottom: 2px solid #333;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    .slider {
+      display: flex;
+      width: 200%;
+      transition: transform 0.6s ease;
+    }
+
+    .page {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .page.active {
+      opacity: 1;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 20px auto;
+    }
+
+    .part, .virus {
+      background: #111;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .part.visible, .virus.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    h2.component {
+      color: #4da6ff;
+    }
+
+    h2.virus {
+      color: #ff4d4d;
+    }
+
+    .arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+      color: #ff4d4d;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1000;
+    }
+
+    .arrow-left {
+      left: 10px;
+    }
+
+    .arrow-right {
+      right: 10px;
+    }
+
+    .arrow:hover {
+      color: #ff9999;
+    }
+
+    .progress {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #333;
+      transition: background 0.3s;
+    }
+
+    .dot.active {
+      background: #ff4d4d;
+    }
+
+    @media (max-width: 768px) {
+      .slider {
+        flex-direction: column;
+        width: 100%;
+      }
+      .page {
+        width: 100%;
+      }
+      .arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>PC Components & Viruses</h1>
+  </header>
+
+  <div class="arrow arrow-left" onclick="prevPage()">&#8592;</div>
+  <div class="arrow arrow-right" onclick="nextPage()">&#8594;</div>
+
+  <div class="slider" id="slider">
+
+    <!-- Page 1: PC Components -->
+    <div class="page" id="page1">
+      <div class="container">
+        <div class="part"><h2 class="component">CPU</h2><p>The CPU is the brain of the computer and handles all processing tasks.</p></div>
+        <div class="part"><h2 class="component">GPU</h2><p>The GPU handles graphics, gaming, and rendering visual output.</p></div>
+        <div class="part"><h2 class="component">RAM</h2><p>RAM stores temporary data needed by applications while they’re running.</p></div>
+        <div class="part"><h2 class="component">Motherboard</h2><p>The motherboard connects all components together so they can communicate.</p></div>
+        <div class="part"><h2 class="component">Storage</h2><p>Storage (SSD/HDD) holds files, programs, and the operating system.</p></div>
+        <div class="part"><h2 class="component">PSU</h2><p>The PSU provides power to every component in the PC.</p></div>
+        <div class="part"><h2 class="component">Cooling</h2><p>Keeps the PC from overheating using fans or liquid cooling.</p></div>
+        <div class="part"><h2 class="component">Case</h2><p>The case houses and protects all PC components.</p></div>
+      </div>
+    </div>
+
+    <!-- Page 2: Top 5 Viruses -->
+    <div class="page" id="page2">
+      <div class="container">
+        <div class="virus"><h2 class="virus">1. ILOVEYOU</h2><p>Spread through email in 2000, caused billions in damages worldwide.</p></div>
+        <div class="virus"><h2 class="virus">2. Mydoom</h2><p>A worm that caused major internet slowdowns in 2004 and massive financial damage.</p></div>
+        <div class="virus"><h2 class="virus">3. WannaCry</h2><p>A ransomware attack in 2017 that affected hundreds of thousands of computers globally.</p></div>
+        <div class="virus"><h2 class="virus">4. Conficker</h2><p>A worm that infected millions of computers in 2008, exploiting Windows vulnerabilities.</p></div>
+        <div class="virus"><h2 class="virus">5. Zeus</h2><p>Banking trojan that stole sensitive financial information from infected PCs.</p></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="progress">
+    <div class="dot active" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+  </div>
+
+  <script>
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.page');
+    const dots = [document.getElementById('dot1'), document.getElementById('dot2')];
+
+    function showPage(index) {
+      const slider = document.getElementById('slider');
+      slider.style.transform = `translateX(-${index * 50}%)`;
+
+      pages.forEach((p, i) => p.classList.remove('active'));
+      pages[index].classList.add('active');
+
+      const sections = pages[index].querySelectorAll('.part, .virus');
+      sections.forEach((s, i) => {
+        setTimeout(() => s.classList.add('visible'), i * 150);
+      });
+
+      dots.forEach(d => d.classList.remove('active'));
+      dots[index].classList.add('active');
+    }
+
+    function resetSections() {
+      pages[currentPage].querySelectorAll('.part, .virus').forEach(s => s.classList.remove('visible'));
+    }
+
+    function nextPage() {
+      if (currentPage < pages.length - 1) currentPage++;
+      resetSections();
+      showPage(currentPage);
+    }
+
+    function prevPage() {
+      if (currentPage > 0) currentPage--;
+      resetSections();
+      showPage(currentPage);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowRight") nextPage();
+      if (e.key === "ArrowLeft") prevPage();
+    });
+
+    // Initialize
+    showPage(currentPage);
+  </script>
+
+</body>
+</html>
+
